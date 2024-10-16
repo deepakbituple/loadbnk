@@ -1,0 +1,49 @@
+@url = http://localhost:3000/api
+
+
+
+### 
+GET {{url}}/
+
+###
+GET {{url}}/commands?controller=CTR2
+Content-Type: application/json
+
+
+
+###
+
+###
+PUT {{url}}/commands/CTR2
+Content-Type: application/json
+
+
+    {
+    "code": "OP5",
+    "value": "ON"
+
+    
+    }
+
+  
+
+###
+
+
+###
+POST {{url}}/commands
+Content-Type: application/json
+
+
+    {
+    "code": "OP2",
+    "value": "OFF2",
+    "controller": "CTR2"
+    }
+
+    
+
+
+
+
+

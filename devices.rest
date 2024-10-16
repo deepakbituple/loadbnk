@@ -1,0 +1,55 @@
+@url = http://localhost:3000/api
+
+
+
+### 
+GET {{url}}/
+
+###
+GET {{url}}/devices?controller=CTR1
+Content-Type: application/json
+
+
+
+###
+
+###
+PUT {{url}}/devices/CTR1
+Content-Type: application/json
+
+[
+    {
+    "device": "OP3",
+    "state": "ON"
+    
+    },
+
+    {
+     "device": "OP4",
+    "state": "OFF2"
+    
+    }
+
+]
+
+###
+
+
+###
+POST {{url}}/devices
+Content-Type: application/json
+
+
+    {
+    "device": "OP5",
+    "type" : "Relay",
+    "state": "OFF2",
+    "controller": "CTR1"
+    }
+
+    
+
+
+
+
+
