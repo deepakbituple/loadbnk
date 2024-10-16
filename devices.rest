@@ -6,7 +6,7 @@
 GET {{url}}/
 
 ###
-GET {{url}}/devices?controller=CTR1
+GET {{url}}/devices?controller=EC-LB-100-5110-01
 Content-Type: application/json
 
 
@@ -14,7 +14,7 @@ Content-Type: application/json
 ###
 
 ###
-PUT {{url}}/devices/CTR1
+PUT {{url}}/devices/EC-LB-100-5110-01
 Content-Type: application/json
 
 [
@@ -26,7 +26,7 @@ Content-Type: application/json
 
     {
      "device": "OP4",
-    "state": "OFF2"
+    "state": "OFF"
     
     }
 
@@ -49,6 +49,30 @@ Content-Type: application/json
 
     
 
+###
+POST {{url}}/devices/bulk
+Content-Type: application/json
+
+// create multiple devices
+    [
+        {
+    "device": "IP2",
+    "type" : "Relay",
+    "state": "OFF",
+    "controller": "EC-LB-100-5110-01"
+    },
+    {
+    "device": "IP3",
+    "type" : "Relay",
+    "state": "OFF",
+    "controller": "EC-LB-100-5110-01"
+    }
+    
+
+
+
+    
+    ]
 
 
 

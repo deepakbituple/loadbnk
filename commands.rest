@@ -6,7 +6,7 @@
 GET {{url}}/
 
 ###
-GET {{url}}/commands?controller=CTR2
+GET {{url}}/commands?controller=EC-LB-100-5110-01
 Content-Type: application/json
 
 
@@ -14,12 +14,12 @@ Content-Type: application/json
 ###
 
 ###
-PUT {{url}}/commands/CTR2
+PUT {{url}}/commands/EC-LB-100-5110-01
 Content-Type: application/json
 
 
     {
-    "code": "OP5",
+    "code": "OPCOMMAND5",
     "value": "ON"
 
     
@@ -29,17 +29,62 @@ Content-Type: application/json
 
 ###
 
-
 ###
 POST {{url}}/commands
 Content-Type: application/json
 
 
     {
-    "code": "OP2",
-    "value": "OFF2",
-    "controller": "CTR2"
+    "code": "OPCOMMAND5",
+    "value": "OFF",
+    "controller": "EC-LB-100-5110-01"
     }
+
+
+###
+POST {{url}}/commands/bulk
+Content-Type: application/json
+
+
+    [{
+    "code": "OPCOMMAND2",
+    "value": "OFF",
+    "controller": "EC-LB-100-5110-01"
+    },
+    {
+    "code": "OPCOMMAND3",
+    "value": "OFF",
+    "controller": "EC-LB-100-5110-01"
+    },
+    {
+    "code": "OPCOMMAND4",
+    "value": "OFF",
+    "controller": "EC-LB-100-5110-01"
+    },
+    {
+    "code": "OPCOMMAND6",
+    "value": "OFF",
+    "controller": "EC-LB-100-5110-01"
+    },
+    {
+    "code": "OPCOMMAND7",
+    "value": "OFF",
+    "controller": "EC-LB-100-5110-01"
+    },
+    {
+    "code": "OPCOMMAND8",
+    "value": "OFF",
+    "controller": "EC-LB-100-5110-01"
+    },
+    {
+    "code": "OPCOMMAND9",
+    "value": "OFF",
+    "controller": "EC-LB-100-5110-01"
+    }
+    
+    
+    
+    ]
 
     
 

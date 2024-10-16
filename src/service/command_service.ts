@@ -1,5 +1,5 @@
 import Command from "../model/command";
-import pool from "./db";
+import { dbpool } from "./db";
 
 export const getCommands = async (controller: string): Promise<Command[]> => {
   const commands: Command[] = [];
@@ -7,9 +7,9 @@ export const getCommands = async (controller: string): Promise<Command[]> => {
   const query = "SELECT * FROM commands where controller = '" + controller + "'";
 
   try {
-    connection = await pool.getConnection();
+    connection = await dbpool.getConnection();
     const [results, fields] = (await connection.query(query)) as [any[], any];
-    console.log("fetch device Results: ", results, "fields: ", fields);
+    console.log("fetch command Results: ", results, "fields: ", fields);
     for (const row of results) {
       const command: Command = {
         controller: row.controller,
@@ -20,7 +20,7 @@ export const getCommands = async (controller: string): Promise<Command[]> => {
       commands.push(command);
     }
   } catch (error) {
-    console.error("Error fetching devices from database", error);
+    console.error("Error fetching commands from database", error);
     throw error;
   } finally {
     if (connection) connection.release();
@@ -34,7 +34,7 @@ const getByCommandCode = async (controller: string, code: string): Promise<Comma
   const query = "SELECT * FROM commands where controller = ? and code = ?";
   // execute the query and return the result
   try {
-    connection = await pool.getConnection();
+    connection = await dbpool.getConnection();
 
     const [results, fields] = (await connection.query(query, [controller, code])) as [any[], any];
     if (results.length > 0) {
@@ -47,21 +47,39 @@ const getByCommandCode = async (controller: string, code: string): Promise<Comma
     }
     return null;
   } catch (error) {
-    console.error("Error fetching devices from database", error);
+    console.error("Error fetching commands from database", error);
     throw error;
   } finally {
     if (connection) connection.release();
   }
 };
 
-export const saveCommand = async (command: Command) => {
+export const createCommand = async (command: Command) => {
   let connection;
   const query = "INSERT INTO commands (controller, code, value, last_updated) VALUES (?, ?, ?, ?)";
   // execute the query and return the result
   try {
-    connection = await pool.getConnection();
+    connection = await dbpool.getConnection();
     await connection.beginTransaction();
     await connection.query(query, [command.controller, command.code, command.value, new Date()]);
+    await connection.commit();
+  } catch (error) {
+    console.error("Error saving commands in database", error);
+    throw error;
+  } finally {
+    if (connection) connection.release();
+  }
+};
+
+export const createMultipleCommands = async (commands: Command[]) => {
+  let connection;
+  const query = "INSERT INTO commands (controller, code, value, last_updated) VALUES ?";
+  // execute the query and return the result
+  try {
+    connection = await dbpool.getConnection();
+    await connection.beginTransaction();
+    const values = commands.map((command) => [command.controller, command.code, command.value, new Date()]);
+    await connection.query(query, [values]);
     await connection.commit();
   } catch (error) {
     console.error("Error saving commands in database", error);
@@ -80,7 +98,7 @@ export const updateCommand = async (controller: string, command: any) => {
   const updateQuery = "UPDATE commands SET value = ?, last_updated = ? WHERE code = ? and controller = ?";
   const currentDateTime = new Date();
   try {
-    connection = await pool.getConnection();
+    connection = await dbpool.getConnection();
     await connection.beginTransaction();
     await connection.query(updateQuery, [command.value, currentDateTime, command.code, controller]);
     await connection.commit();

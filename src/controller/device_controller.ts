@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 import Device from "../model/device";
 import * as DeviceService from "../service/device_service";
+import { count } from "console";
 
 export const getDevices = async (req: Request, res: Response, next: NextFunction) => {
   const controller = req.query.controller as string;
@@ -14,7 +15,11 @@ export const getDevices = async (req: Request, res: Response, next: NextFunction
       res.status(404).json({ message: "No devices found for controller " + controller });
       return;
     }
-    res.status(200).json(devices);
+    res.status(200).json({
+      count: devices.length,
+      devices,
+      message: "Devices fetched successfully",
+    });
   } catch (error) {
     next(error);
   }
@@ -29,6 +34,20 @@ export const createDevice = async (req: Request, res: Response, next: NextFuncti
     }
     const result = await DeviceService.createDevice(device);
     res.status(201).json({ result, message: "Device created successfully" });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const createMultipleDevices = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const devices: Device[] = req.body;
+    if (!devices || devices.length === 0) {
+      res.status(400).json({ message: "Invalid input. No devices to create" });
+      return;
+    }
+    const result = await DeviceService.createMultipleDevices(devices);
+    res.status(201).json({ result, message: "Devices created successfully" });
   } catch (error) {
     next(error);
   }
