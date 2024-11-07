@@ -1,4 +1,4 @@
-@url = http://localhost:3000/api
+@url = http://localhost:5001/api
 
 
 
@@ -14,12 +14,12 @@ Content-Type: application/json
 ###
 
 ###
-PUT {{url}}/commands/EC-LB-100-5110-01
+PUT {{url}}/commands/EC01/OP1
 Content-Type: application/json
 
 
     {
-    "code": "OPCOMMAND5",
+    
     "value": "ON"
 
     
@@ -35,7 +35,7 @@ Content-Type: application/json
 
 
     {
-    "code": "OPCOMMAND5",
+    "code": "OPCOMMAND1",
     "value": "OFF",
     "controller": "EC-LB-100-5110-01"
     }

@@ -2,12 +2,12 @@ import express from "express";
 const router = express.Router();
 import * as DeviceController from "../controller/device_controller";
 
-router.post("/", DeviceController.createDevice);
+// router.post("/", DeviceController.createDevice);
 
 router.post("/bulk", DeviceController.createMultipleDevices);
 
-router.get("/", DeviceController.getDevices);
+router.get("/:controller", DeviceController.getDevices);
 
-router.put("/:controller", DeviceController.updateDevices);
+router.delete("/:controller/:device", DeviceController.deleteDevice);
 
 export default router;

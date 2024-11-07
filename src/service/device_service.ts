@@ -1,110 +1,66 @@
+// Create, update, delete and List functions to Create Device in mongodb
+
+import mqtt from "mqtt/*";
 import Device from "../model/device";
-import { dbpool } from "./db";
+import * as MQTTService from "./mqtt_service";
 
-async function createDevice(device: Device): Promise<boolean> {
-  let connection;
-  const query = "INSERT INTO device (device, type, state,  controller) VALUES (?, ?, ?, ?)";
-  // execute the query and return the result
+export const get = async (controller: string): Promise<Device[]> => {
   try {
-    connection = await dbpool.getConnection();
-    const [results, fields] = (await connection.query(query, [
-      device.device,
-      device.type,
-      device.state,
-      device.controller,
-    ])) as [any[], any];
-    console.log("create device Results: ", results, "fields: ", fields);
-    return true;
-  } catch (error) {
-    console.error("Error creating device in database", error);
-    throw error;
-  } finally {
-    if (connection) connection.release();
-  }
-}
-
-async function createMultipleDevices(devices: Device[]): Promise<boolean> {
-  let connection;
-  const query = "INSERT INTO device (device, type, state,  controller) VALUES ?";
-  // execute the query and return the result
-  try {
-    connection = await dbpool.getConnection();
-    const values = devices.map((device) => [device.device, device.type, device.state, device.controller]);
-    const [results, fields] = (await connection.query(query, [values])) as [any[], any];
-    console.log("create device Results: ", results, "fields: ", fields);
-    return true;
-  } catch (error) {
-    console.error("Error creating device in database", error);
-    throw error;
-  } finally {
-    if (connection) connection.release();
-  }
-}
-
-async function getDevices(controller: string): Promise<Device[]> {
-  const devices: Device[] = [];
-  let connection;
-  const query = "SELECT * FROM device where controller = '" + controller + "'";
-  // execute the query and return the result
-  try {
-    connection = await dbpool.getConnection();
-    const [results, fields] = (await connection.query(query)) as [any[], any];
-    console.log("fetch device Results: ", results, "fields: ", fields);
-    for (const row of results) {
-      const device: Device = {
-        controller: row.controller,
-        device: row.device,
-        type: row.type,
-        state: row.state,
-        last_seen: row.last_seen,
-      };
-      devices.push(device);
-    }
+    const devices = await Device.find({ controller: controller });
+    return devices;
   } catch (error) {
     console.error("Error fetching devices from database", error);
     throw error;
-  } finally {
-    if (connection) connection.release();
   }
+};
 
-  return devices;
-}
-
-async function updateDevices(controller: string, deviceInput: any[]) {
-  console.log("Updating device status for controller: ", controller, deviceInput);
-  let connection: any;
-  const updateQuery = "UPDATE device SET state = ?, last_seen = ? WHERE device = ? and controller = ?";
-  const currentDateTime = new Date();
-  let changedRows = 0;
+export const create = async (device: Device): Promise<boolean> => {
   try {
-    connection = await dbpool.getConnection();
-    connection.beginTransaction();
-    await deviceInput.forEach(async (deviceIn: any) => {
-      const [results, fields] = await connection.query(updateQuery, [
-        deviceIn.state,
-        currentDateTime,
-        deviceIn.device,
-        controller,
-      ]);
-      console.log("Device ", deviceIn.device, " updated successfully", results);
-      changedRows += results.changedRows;
-    });
-
-    connection.commit();
-    console.log("Total devices updated: ", changedRows);
+    await Device.create(device);
+    return true;
   } catch (error) {
-    if (connection) connection.rollback();
-    changedRows = 0;
-    console.error("Error updating devices in  database", error);
+    console.error("Error creating device in database", error);
     throw error;
-  } finally {
-    if (connection) connection.release();
   }
-  return changedRows;
-}
+};
 
-// async function createDevice(device: Device) {
-//   return await createNewDevice(device);
-// }
+export const createMultiple = async (devices: Device[]): Promise<boolean> => {
+  try {
+    await Device.insertMany(devices);
+    return true;
+  } catch (error) {
+    console.error("Error creating device in database", error);
+    throw error;
+  }
+};
 
-export { getDevices, updateDevices, createDevice, createMultipleDevices };
+export const deleteDevice = async (controller: string, device: string): Promise<boolean> => {
+  try {
+    await Device.deleteOne({ controller: controller, device: device });
+    return true;
+  } catch (error) {
+    console.error("Error deleting device in database", error);
+    throw error;
+  }
+};
+
+export const updateDevicesStatus = async (controller: string, deviceValue: Map<string, string>): Promise<boolean> => {
+  try {
+    for (const [deviceName, value] of deviceValue) {
+      const device = await Device.findOne({ controller: controller, device: deviceName });
+      if (!device) {
+        // console.warn("Device not found with name " + deviceName);
+        continue;
+      } else {
+        device.value = value;
+        device.last_seen = new Date();
+        await device.save();
+        // MQTTService.publishMessage(device);
+      }
+    }
+    return true;
+  } catch (error) {
+    console.error("Error updating device status in database", error);
+    throw error;
+  }
+};

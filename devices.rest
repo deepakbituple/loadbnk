@@ -1,4 +1,4 @@
-@url = http://localhost:3000/api
+@url = http://localhost:5001/api
 
 
 
@@ -6,7 +6,7 @@
 GET {{url}}/
 
 ###
-GET {{url}}/devices?controller=EC-LB-100-5110-01
+GET {{url}}/devices/EC-LB-100-5110-01
 Content-Type: application/json
 
 
@@ -14,23 +14,20 @@ Content-Type: application/json
 ###
 
 ###
-PUT {{url}}/devices/EC-LB-100-5110-01
+POST {{url}}/devices
 Content-Type: application/json
 
-[
     {
-    "device": "OP3",
-    "state": "ON"
-    
-    },
-
-    {
-     "device": "OP4",
-    "state": "OFF"
+        "id":"1",
+    "device": "OP1",
+    "type" : "Relay",
+    "constroller": "EC-LB-100-5110-01"
     
     }
 
-]
+    
+
+
 
 ###
 
@@ -41,10 +38,10 @@ Content-Type: application/json
 
 
     {
-    "device": "OP5",
+        "id":"2",
+    "device": "OP2",
     "type" : "Relay",
-    "state": "OFF2",
-    "controller": "CTR1"
+    "controller": "EC-LB-100-5110-01"
     }
 
     

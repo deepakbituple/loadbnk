@@ -1,0 +1,61 @@
+@url = http://localhost:5001/api/controllers
+
+
+
+### 
+GET {{url}}/
+
+###
+GET {{url}}/?controller=EC-LB-100-5110-01
+Content-Type: application/json
+
+
+
+###
+
+
+POST  {{url}}
+Content-Type: application/json
+
+{
+    "controller_id": "EC02",
+    "name": "Load Bank 100kW -2 ",
+    "type": "Load Bank 2"
+    
+}
+
+###
+PATCH  {{url}}/EC01
+Content-Type: application/json
+
+
+    {
+    "device_id": "v",
+    "name": "voltage",
+    "type" : "AO"
+
+    
+    }
+
+  
+
+###
+
+
+###
+PATCH  {{url}}/EC01/OP5
+Content-Type: application/json
+
+
+    {
+    
+    "enabled": true
+
+    
+    }
+
+  
+
+###
+
+
