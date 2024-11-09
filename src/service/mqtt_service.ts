@@ -104,4 +104,8 @@ const publishMessage = async (controller_id: string, device_id: string, value: s
   });
 };
 
-export { startMQTTClient, disconnect, reconnect, publishMessage };
+const getMQTTStatus = () => {
+  return mqttClient.connected;
+};
+
+export { startMQTTClient, disconnect, reconnect, publishMessage, getMQTTStatus };

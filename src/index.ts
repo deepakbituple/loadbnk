@@ -48,6 +48,20 @@ app.use("/api/devices", device_route);
 app.use("/api/commands", command_route);
 app.use("/api/controllers", controller_route);
 
+app.get("/", (req: Request, res: Response) => {
+  const mqttStatus = MQTTService.getMQTTStatus();
+  const mongoDBStatus = mongoose.connection.readyState;
+  const socketClients = io.engine.clientsCount;
+  const influxDbStatus = "Not implemented";
+  let message = "MQTTStatus is " + mqttStatus;
+  message += " mongoDBStatus is " + mongoDBStatus;
+  message += " socketClients is " + socketClients;
+  message += " influxDbStatus is " + influxDbStatus;
+  message += " timestamp is " + moment().format("YYYY-MM-DD HH:mm:ss");
+
+  res.status(200).json({ message });
+});
+
 // create generic error handler
 app.use((err: Error, req: Request, res: Response, next: any) => {
   console.error(err.stack);
