@@ -21,7 +21,7 @@ const httpServer = createServer(app);
 export const io = new Server(httpServer);
 io.listen(Number(8000), {
   cors: {
-    origin: "http://localhost:3000",
+    origin: "*",
     methods: ["GET", "POST"],
   },
 });
@@ -53,7 +53,7 @@ app.get("/", (req: Request, res: Response) => {
   const mongoDBStatus = mongoose.connection.readyState;
   const socketClients = io.engine.clientsCount;
   const influxDbStatus = "Not implemented";
-  let message = "MQTTStatus is " + mqttStatus;
+  let message = "You have reached LoadBank Backend NodeJS server. MQTTStatus is " + mqttStatus;
   message += " mongoDBStatus is " + mongoDBStatus;
   message += " socketClients is " + socketClients;
   message += " influxDbStatus is " + influxDbStatus;
