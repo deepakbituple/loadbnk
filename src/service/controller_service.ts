@@ -108,7 +108,7 @@ deviceValues = {
 */
 export const updateDeviceStatus = async (controllerId: string, deviceValues: any): Promise<Controller> => {
   try {
-    console.log("Updating device status in Controller service updateDeviceStatus", controllerId, deviceValues);
+    // console.log("Updating device status in Controller service updateDeviceStatus", controllerId, deviceValues);
 
     const controller = await Controller.findOne({ controller_id: controllerId });
     if (!controller) {

@@ -1,9 +1,9 @@
-@url = http://localhost:5001/api
+@url = https://loadbank.simplocity.in/api
 
 
 
 ### 
-GET {{url}}/
+GET {{url}}/devices/EC01
 
 ###
 GET {{url}}/devices/EC-LB-100-5110-01
@@ -14,7 +14,7 @@ Content-Type: application/json
 ###
 
 ###
-POST {{url}}/devices
+POST {{url}}/simdata
 Content-Type: application/json
 
     {
@@ -53,12 +53,16 @@ Content-Type: application/json
 // create multiple devices
     [
         {
+            "id":1,
+     "device_id":"1111",       
     "device": "IP2",
     "type" : "Relay",
     "state": "OFF",
     "controller": "EC-LB-100-5110-01"
     },
     {
+        "id":2,
+        "device_id":"1112",
     "device": "IP3",
     "type" : "Relay",
     "state": "OFF",

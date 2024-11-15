@@ -45,13 +45,13 @@ const startMQTTClient = async () => {
   });
 
   mqttClient.on("message", async (topic: string, payload: any) => {
-    console.log("Received Message: onmessage", topic, payload.toString());
+    // console.log("Received Message: onmessage", topic, payload.toString());
     if (subscriptionList.includes(topic)) {
       const data = JSON.parse(payload.toString());
       const controllerId = topic.split("/")[1];
       const values = data.values;
       const controller = await ControllerService.updateDeviceStatus(controllerId, values);
-      console.log("Updated controller in on message", controller);
+      // console.log("Updated controller in on message", controller);
       io.emit("controller", controller);
       //   deviceLogsService.create(controllerId, values);
       writeDeviceLogs(controllerId, values);
@@ -96,7 +96,7 @@ const reconnect = () => {
 const publishMessage = async (controller_id: string, device_id: string, value: string) => {
   const topic = `${projectName}/${controller_id}/${device_id}`;
   const message = value;
-  console.log("Publishing message", topic, message);
+  // console.log("Publishing message", topic, message);
   mqttClient.publish(topic, message, { qos: 2 }, (err: any) => {
     if (err) {
       console.error("Error publishing message", err);

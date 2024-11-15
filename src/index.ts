@@ -39,14 +39,20 @@ io.on("connection", (socket: Socket) => {
   });
 });
 
+app.use("/api/devices", device_route);
+app.use("/api/commands", command_route);
+app.use("/api/controllers", controller_route);
+
+app.post("/api/simdata", async (req: Request, res: Response) => {
+  const data = req.body;
+  console.log("Sim data received:", data);
+  res.status(200).json({ message: "Sim data received on db1rp5" });
+});
+
 app.get("/api", async (req: Request, res: Response) => {
   let message = "API server is up";
   res.status(200).json({ message });
 });
-
-app.use("/api/devices", device_route);
-app.use("/api/commands", command_route);
-app.use("/api/controllers", controller_route);
 
 app.get("/", (req: Request, res: Response) => {
   const mqttStatus = MQTTService.getMQTTStatus();
